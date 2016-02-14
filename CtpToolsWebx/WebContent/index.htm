@@ -1,0 +1,230 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html ng-app="myapp">
+
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Navegação em abas</title>
+<link rel="stylesheet" type="text/css" href="estilo.css" />
+
+<script src="jsonp.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>
+<script type="text/javascript" src="javascript.js"></script>
+<script src="angular.js"></script>
+<script src="angular-messages.js"></script>
+<script src="bootstrap.min.js"></script>
+
+
+	<script>
+
+		angular.module("myapp", ["ngMessages"]);
+		angular.module("myapp").controller("listaTelefonicaCtrl", function ($scope, $http) {
+		$scope.app = "Dados do Instrumento Financeiro";
+		$scope.iifs = [];
+		$scope.operacoes = [];
+		$scope.dataBase = "charitas";
+			
+		var carregarInstrumentoFinanceiro = function () {
+			console.log("CONECTANDO BANCO DE DADOS 1: " + $scope.dataBase);
+			$http.get("http://localhost:8080/WebServiceReynet/rest/instrumentofinanceiro/obtetListaIF/"+$scope.dataBase ).success(function (data, status) {
+			$scope.iifs = data;
+				}).error(function (data, status) {
+					$scope.message = "Erro ao carregar IF: " + data;
+				});
+		};
+		
+	   var carregarOperacao = function () {
+		   console.log("CONECTANDO BANCO DE DADOS 2: " + $scope.dataBase);
+			$http.get("http://localhost:8080/WebServiceReynet/rest/instrumentofinanceiro/obtetListaOperacao/" +$scope.dataBase).success(function (data, status) {
+			$scope.operacoes = data;
+				}).error(function (data, status) {
+					$scope.message = "Erro ao carregar OPERACAO: " + data;
+				});
+		};
+		
+		$scope.obterIF = function() {
+			
+			  if (!angular.isDefined($scope.ctpCodIF) || $scope.ctpCodIF === '') {
+				  var response = $http.get("http://localhost:8080/WebServiceReynet/rest/instrumentofinanceiro/obtetListaIF/"+$scope.dataBase);
+			      response.success(function(data) {
+			      $scope.iifs = data;
+			      });
+			  }else{
+				  var response = $http.get("http://localhost:8080/WebServiceReynet/rest/instrumentofinanceiro/obtetIF/"+ $scope.ctpCodIF + "/" +$scope.dataBase);
+			      response.success(function(data) {
+			      $scope.iifs = data;
+			      });  
+			  }
+		      
+		};
+		
+		
+		$scope.obterConexao = function() {
+		      var response = $http.get("http://localhost:8080/WebServiceReynet/rest/instrumentofinanceiro/obtetListaIF/"+$scope.dataBase);
+		      response.success(function(data) {
+		      $scope.iifs = data;
+		      });
+		};
+		
+		
+			
+		carregarInstrumentoFinanceiro();
+		carregarOperacao();
+			
+		});
+		
+	</script>
+</head>
+
+<body ng-controller="listaTelefonicaCtrl">
+<div class="global-div">
+
+<h1>Consulta Geral de Ativos</h1>
+
+<ul class="abas">
+    <li><a href="#IF">Dados IF</a></li>
+    <li><a href="#Operacao">Listagem de Operações</a></li>
+    <li><a href="#Custodia">Custódias</a></li>
+    <li><a href="#Eventos">Agenda de eventos</a></li>
+</ul>
+
+<div>
+ <l>Ambiente: </l>
+ 	<select name="Ambiente" id="ambiente" size="1" ng-model="dataBase" ng-change="obterConexao()">
+	  <option value="charitas" selected="selected">charitas</option>
+	  <option value="centro">centro</option>
+	  <option value="leblon">leblon</option>
+	  <option value="penha">penha</option>
+	</select>
+	
+	<l>Código IF: </l>
+	<input type="text" name="codIF" ng-model="ctpCodIF">
+	<button ng-click="obterIF()">Consultar</button>
+	 
+</div>
+
+
+<div id="noticia"></div>
+
+<div id="conteudo">
+
+    <div id="IF">
+    <h2>{{app}}</h2>
+    
+    <table id="tab">
+			<thead>
+				<tr>
+					<th>Tipo IF</th>
+					<th>Código IF</th>
+					<th>Situação</th>
+					
+				</tr>
+			</thead> 
+			<tbody>
+				<tr ng-repeat="iif in iifs">				
+					<td>{{iif.codTipoIF}}</td>
+					<td>{{iif.codIF}}</td>				
+					<td>{{iif.codSituacaoIF}}</td>
+					
+				</tr>
+			</tbody>	
+		</table>
+		
+    </div>
+	
+	
+    
+    <div id="Operacao">
+    <h2>Operações</h2>
+    	<table id="tab">
+			<thead>
+				<tr>
+					<th>Código Operacao</th>
+					<th>Tipo Operacao</th>
+					<th>Data Operação</th>
+					<th>Data Financeiro</th>
+					
+				</tr>
+			</thead> 
+			<tbody>
+				<tr ng-repeat="operacao in operacoes">				
+					<td>{{operacao.codOperacao}}</td>
+					<td>{{operacao.tipoOperacao}}</td>
+					<td>{{operacao.dataOperacao}}</td>				
+					<td>{{operacao.dataFinanceiro}}</td>
+					
+				</tr>
+			</tbody>	
+		</table>
+    </div>
+    
+    <div id="Custodia">
+    <h2>Carteira Participante</h2>
+    	<table id="tab">
+			<thead>
+				<tr>
+					<th>Código Operacao</th>
+					<th>Data Operação</th>
+					<th>Data Financeiro</th>
+					
+				</tr>
+			</thead> 
+			<tbody>
+				<tr ng-repeat="iif in iifs">				
+					<td>{{iif.codTipoIF}}</td>
+					<td>{{iif.codIF}}</td>				
+					<td>{{iif.codSituacaoIF}}</td>
+					
+				</tr>
+			</tbody>	
+		</table>
+		<p></p>
+		
+		<h2>Carteira Comitente</h2>
+    	<table id="tab">
+			<thead>
+				<tr>
+					<th>Código Operacao</th>
+					<th>Data Operação</th>
+					<th>Data Financeiro</th>					
+				</tr>
+			</thead> 
+			<tbody>
+				<tr ng-repeat="iif in iifs">				
+					<td>{{iif.codTipoIF}}</td>
+					<td>{{iif.codIF}}</td>				
+					<td>{{iif.codSituacaoIF}}</td>
+				</tr>
+			</tbody>	
+		</table>
+    </div>
+    
+    <div id="Eventos">
+    <h2>Agenda de Eventos</h2>
+    	<table id="tab">
+			<thead>
+				<tr>
+					<th>Tipo de Evento</th>
+					<th>Data Ocorrência</th>
+					<th>Data Financeiro</th>
+					
+				</tr>
+			</thead> 
+			<tbody>
+				<tr ng-repeat="iif in iifs">				
+					<td>{{iif.codTipoIF}}</td>
+					<td>{{iif.codIF}}</td>				
+					<td>{{iif.codSituacaoIF}}</td>
+					
+				</tr>
+			</tbody>	
+		</table>
+
+</div>
+
+<p class="credito">By Reynet</p>
+
+</div>
+
+</body>
+</html>

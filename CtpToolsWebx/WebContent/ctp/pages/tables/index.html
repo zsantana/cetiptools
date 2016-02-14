@@ -1,0 +1,498 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html ng-app="ctpApp" dir="ltr" lang="pt-BR">
+	
+<head>
+
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>
+	<script type="text/javascript" src="javascript.js"></script>
+	<script src="angular.js"></script>
+	<script src="angular-messages.js"></script>
+    <script src="app.js"></script>
+    
+    <stile>
+    
+    .finalizado{
+    	background-color: green;
+    }
+    
+    
+    </stile>
+	
+		
+	<meta charset="UTF-8" /> 
+    <title>CetipToolsWebx</title>
+    
+    
+    <!-- Bootstrap 3.3.5 -->
+    <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../../bootstrap/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="../../bootstrap/css/ionic/css/ionicons.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="../../plugins/datatables/dataTables.bootstrap.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../../bootstrap/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="../../bootstrap/css/skins/_all-skins.min.css">
+    
+  </head>
+  
+  
+  
+  <body class="hold-transition skin-blue sidebar-mini" ng-controller="ctpController">
+    <div class="wrapper">
+
+      <header class="main-header">
+        <!-- Logo -->
+        <a href="../../index2.html" class="logo">
+          <!-- mini logo for sidebar mini 50x50 pixels -->
+          <span class="logo-mini"><b>CTP</b></span>
+          <!-- logo for regular state and mobile devices -->
+          <span class="logo-lg"><b>CetipToolsWex +</b></span>
+        </a>
+        <!-- Header Navbar: style can be found in header.less -->
+        <nav class="navbar navbar-static-top" role="navigation">
+          <!-- Sidebar toggle button-->
+          <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+        </nav>
+      </header>
+      
+      
+      <!-- Left side column. contains the logo and sidebar -->
+      <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+          <!-- Sidebar user panel -->
+          <div class="user-panel">
+            <div class="pull-left image">
+              <img src="../../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+            </div>
+            <div class="pull-left info">
+              <p>Reinaldo Santana</p>
+              <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+            </div>
+          </div>
+          
+          <!-- sidebar menu: : style can be found in sidebar.less -->
+          <ul class="sidebar-menu">
+            <li class="header">Smart Menu</li>
+            <li class="treeview">
+              <a href="#">
+                <i class="fa fa-dashboard"></i> <span>Operações</span> <i class="fa fa-angle-left pull-right"></i>
+              </a>
+              <ul class="treeview-menu">
+                <li><a href="../tables/index.html"><i class="fa fa-circle-o"></i> Consulta Geral</a></li>
+                <li><a href="../../index2.html"><i class="fa fa-circle-o"></i> DashBoard CTP</a></li>
+              </ul>
+            </li>
+          <ul>  
+        </section>
+        <!-- /.sidebar -->
+      </aside>
+
+      <!-- Content Wrapper. Contains page content -->
+      <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+          <h1>
+            CetipToolsWebx
+            <small>Consulta Geral de Ativos</small>
+          </h1>
+		  
+		  <div>
+ 			<small>Ambientes:</small>
+ 			<select name="Ambiente" id="ambiente" size="1" ng-model="dataBase" ng-change="obterIF()">
+	  		<option value="charitas" selected="selected">charitas</option>
+	  		<option value="centro">centro</option>
+	  		<option value="leblon">leblon</option>
+	  		<option value="penha">penha</option>
+			</select>
+	
+			<small>Código IF: </small>
+			<input type="text" value="CVRDA6" name="codIF" ng-model="ctpCodIF" >
+			<button ng-click="obterIF()">Consultar</button>
+		</div>
+		  
+   </section>
+
+
+        <!-- Main content -->
+        <section class="content">
+          <div class="row">
+            <div class="col-xs-12">
+
+			<div class="col-md-20">
+              <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                  <li class="active"><a href="#IF" data-toggle="tab">Instrumento Financeiro</a></li>
+                  <li><a href="#operacao" data-toggle="tab">Operações</a></li>
+                  <li><a href="#cartPartic" data-toggle="tab">Carteira Participante</a></li>
+                  <li><a href="#cartComit" data-toggle="tab">Carteira Comitente</a></li>
+                  <li><a href="#agenda" data-toggle="tab">Agenda de eventos</a></li>
+                  <li><a href="#multLateral" data-toggle="tab">Resumo Operações</a></li>
+                  <li><a href="#tipoIF" data-toggle="tab">Consulta Tipo IF</a></li>
+                </ul>
+                
+                
+                <div class="tab-content">
+                
+                  <div class="active tab-pane" id="IF" >
+	                  <div class="box-body">
+	                  <table id="tblIF" class="table table-bordered table-hover">
+					  <thead>
+							<tr>
+								<th>Tipo IF</th>
+								<th>Código IF</th>
+								<th>Situação</th>
+								
+							</tr>
+					  </thead> 
+						<tbody>
+							<tr ng-repeat="iif in listaIF">				
+								<td>{{iif.codTipoIF}}</td>
+								<td>{{iif.codIF}}</td>				
+								<td>{{iif.codSituacaoIF}}</td>
+								
+							</tr>
+						</tbody>
+	                  </table>
+	                  </div><!-- /.box-body -->
+                  </div>
+                  
+                  
+                            
+                  <!--  INI OPERACAO -->
+                  <div class="tab-pane" id="operacao" >
+		              <div class="box">
+		               
+		               <div>
+				 			<small>Modalidade:</small>
+				 			<select name="modalidade" id="modalidade" ng-model="mdModalidade" ng-change="obterModalidade()">
+				 			<option value="" selected="selected"></option>
+					  		<option value="SEM MODALIDADE">SEM MODALIDADE</option>
+					  		<option value="BRUTA STR">BRUTA STR</option>
+					  		<option value="BRUTA BT">BRUTA BT</option>
+							</select>
+						</div>
+		               
+		               
+		               
+						
+		                <div >
+		                  <table id="tblIF" class="table table-bordered table-hover">
+	                      <input type="checkbox" ng-modal="autorefresh"> auto refresh : <pre>{{autorefresh}}</pre>
+		                  
+							<thead>
+								<tr>
+									<th>Código Operacao</th>
+									<th>Tipo Operacao</th>
+									<th>Data Operação</th>
+									<th>Data Financeiro</th>
+									<th>Situação Operação</th>
+									<th>Modalidade</th>
+								</tr>
+							</thead> 
+							<tbody>
+								<tr ng-style="set_color_operacao(operacao)" ng-repeat="operacao in listaOperacao">
+												
+									<td>{{operacao.codOperacao}}</td>
+									<td>{{operacao.tipoOperacao}}</td>
+									<td>{{operacao.dataOperacao}}</td>
+									<td>{{operacao.dataFinanceiro}}</td>
+									<td>{{operacao.codStatusOpeacao}}</td>
+									<td>{{operacao.codModalidade}}</td>
+									
+								</tr>
+							</tbody>	
+						</table>
+		                </div><!-- /.box-body -->
+		              </div><!-- /.box -->
+                  </div><!-- /.tab-pane -->
+				 <!--  FIM OPERACAO -->        
+
+
+<!--  INI CARTEIRA PARTICIPANTE  ================================================================== -->
+                  
+                  <div class="tab-pane" id="cartPartic">
+		              <div class="box">
+		                <div class="box-body">
+		                  <table id="tblIF" class="table table-bordered table-hover">
+							<thead>
+								<tr>
+									<th>Tipo Posição Carteira</th>
+									<th>Conta Participante</th>
+									<th>Qtd Custódia</th>
+								</tr>
+							</thead> 
+							<tbody>
+								<tr ng-repeat="carteiraParticipante in listaCartParticipante">				
+									<td>{{carteiraParticipante.codTipoOpsicaoCarteira}}</td>
+									<td>{{carteiraParticipante.codContaParticipante}}</td>
+									<td>{{carteiraParticipante.qtdCarteira}}</td>				
+								</tr>
+							</tbody>	
+						</table>
+		                </div><!-- /.box-body -->
+		              </div><!-- /.box -->
+                  </div><!-- /.tab-pane -->
+<!--  FIM CARTEIRA PARTICIPANTE ================================================================ -->
+                  
+				
+
+<!--  INI CARTEIRA COMITENTE ============================================================ -->				
+				<div class="tab-pane" id="cartComit">
+		              <div class="box">
+						<small>Localizar Comitente: </small>
+						<input type="text" name="buscaComitente" ng-model="codDocumento">
+						<button ng-click="obterComitente()">Consultar</button>
+						
+		                <div class="box-body">
+		                  <table id="tblIF" class="table table-bordered table-hover">
+							<thead>
+								<tr>
+									<th>Tipo Posição Carteira</th>
+									<th>Conta Cliente</th>
+									<th>CPF/CNPJ</th>
+									<th>Qtd Custódia</th>
+								</tr>
+							</thead> 
+							<tbody>
+								<tr ng-repeat="custodia in listaCartComitente">				
+									<td ng-if="$odd" style="background-color:#f1f1f1">{{custodia.codTipoOpsicaoCarteira}}</td>
+									<td ng-if="$even">{{custodia.codTipoOpsicaoCarteira}}</td>
+									
+									<td ng-if="$odd" style="background-color:#f1f1f1">{{custodia.codContaParticipante}}</td>
+									<td ng-if="$even">{{custodia.codContaParticipante}}</td>
+									
+									<td ng-if="$odd" style="background-color:#f1f1f1">{{custodia.codDocumento}}</td>
+									<td ng-if="$even">{{custodia.codDocumento}}</td>
+									
+									<td ng-if="$odd" style="background-color:#f1f1f1">{{custodia.qtdCarteira}}</td>
+									<td ng-if="$even">{{custodia.qtdCarteira}}</td>				
+								</tr>
+							</tbody>	
+						</table>
+		                </div><!-- /.box-body -->
+		              </div><!-- /.box -->
+                  </div><!-- /.tab-pane -->
+<!--  FIM CARTEIRA COMITENTE =========================================================== --> 
+				
+				
+
+<!--  INI AGENDA DE EVENTOS =========================================================== -->                  
+                  <div class="tab-pane" id="agenda">
+		             <!--  INI AGENDA -->
+		              <div class="box">
+		                <div class="box-body">
+		                  <table id="tblIF" class="table table-bordered table-hover">
+							<thead>
+								<tr>
+									<th>Data OCorrência Evento</th>
+									<th>Tipo de Evento</th>
+									<th>Valor de PU</th>
+									<th>Valor de Evento</th>
+									<th>Status do Evento</th>
+									<th>Status Final Evento</th>
+								</tr>
+							</thead> 
+							<tbody>
+								<tr ng-repeat="evento in listaEvento">				
+								
+									<td ng-if="$odd" style="background-color:#f1f1f1">{{evento.dataOcorrenciaEvento}}</td>
+									<td ng-if="$even">{{evento.dataOcorrenciaEvento}}</td>
+									
+									<td ng-if="$odd" style="background-color:#f1f1f1">{{evento.tipoEvento}}</td>
+									<td ng-if="$even">{{evento.tipoEvento}}</td>
+									
+									<td ng-if="$odd" style="background-color:#f1f1f1">{{evento.valorPuEvento}}</td>
+									<td ng-if="$even">{{evento.valorPuEvento}}</td>
+									
+									<td ng-if="$odd" style="background-color:#f1f1f1">{{evento.valorEvento}}</td>
+									<td ng-if="$even">{{evento.valorEvento}}</td>
+									
+									<td ng-if="$odd" style="background-color:#f1f1f1">{{evento.statusEvento}}</td>
+									<td ng-if="$even">{{evento.statusEvento}}</td>
+									
+									<td ng-if="$odd" style="background-color:#f1f1f1">{{evento.statusFinalEvento}}</td>
+									<td ng-if="$even">{{evento.statusFinalEvento}}</td>
+									
+								</tr>
+							</tbody>	
+						</table>
+		                </div><!-- /.box-body -->
+		              </div><!-- /.box -->
+                  </div><!-- /.tab-pane -->
+<!--  INI AGENDA DE EVENTOS =========================================================== -->               
+               
+
+<!--  INI RESUMO OPERAÇÕES =========================================================== -->               
+				  <div class="tab-pane" id="multLateral">
+					        <section class="content">
+					          <div class="row">
+					            
+					            <div class="col-md-3 col-sm-6 col-xs-12">
+					              <div class="info-box">
+					                <span class="info-box-icon bg-aqua"><i class="fa fa-envelope-o"></i></span>
+					                <div class="info-box-content">
+					                  <span class="info-box-text">Mensagens:</span>
+					                  <span class="info-box-number">{{totMensagem}}</span>
+					                </div><!-- /.info-box-content -->
+					              </div><!-- /.info-box -->
+					            </div><!-- /.col -->
+					            
+					            <div class="col-md-3 col-sm-6 col-xs-12">
+					              <div class="info-box">
+					                <span class="info-box-icon bg-green"><i class="fa fa-flag-o"></i></span>
+					                <div class="info-box-content">
+					                  <span class="info-box-text">Tela</span>
+					                  <span class="info-box-number">{{totTela}}</span>
+					                </div><!-- /.info-box-content -->
+					              </div><!-- /.info-box -->
+					            </div><!-- /.col -->
+					            
+					            <div class="col-md-3 col-sm-6 col-xs-12">
+					              <div class="info-box">
+					                <span class="info-box-icon bg-yellow"><i class="fa fa-files-o"></i></span>
+					                <div class="info-box-content">
+					                  <span class="info-box-text">Arquivo</span>
+					                  <span class="info-box-number">{{totArquivo}}</span>
+					                </div><!-- /.info-box-content -->
+					              </div><!-- /.info-box -->
+					            </div><!-- /.col -->
+					            
+					            <div class="col-md-3 col-sm-6 col-xs-12">
+					              <div class="info-box">
+					                <span class="info-box-icon bg-red"><i class="fa fa-user"></i></span>
+					                <div class="info-box-content">
+					                  <span class="info-box-text">Dead Letter</span>
+					                  <span class="info-box-number">{{totDeadLetter}}</span>
+					                </div><!-- /.info-box-content -->
+					              </div><!-- /.info-box -->
+					            </div><!-- /.col -->
+					          </div><!-- /.row -->
+					           
+					           
+					           <div class="col-lg-3 col-xs-6">
+					              <!-- small box -->
+					              <div class="small-box bg-aqua">
+					                <div class="inner">
+					                  <h3>{{totFinMultLateral}}</h3>
+					                  <p>Total Mult-Lateral</p>
+					                </div>
+					                <div class="icon">
+					                  <i class="ion ion-bag"></i>
+					                </div>
+					              </div>
+					            </div><!-- ./col -->
+					           <div class="col-lg-3 col-xs-6">
+					              <!-- small box -->
+					              <div class="small-box bg-green">
+					                <div class="inner">
+					                  <h3>{{totFinBrutaStr}}</h3>
+					                  <p>Total Bruta STR</p>
+					                </div>
+					                <div class="icon">
+					                  <i class="ion ion-stats-bars"></i>
+					                </div>
+					              </div>
+					            </div><!-- ./col -->
+					            
+					            <div class="col-lg-3 col-xs-6">
+					              <!-- small box -->
+					              <div class="small-box bg-yellow">
+					                <div class="inner">
+					                  <h3>{{totFinBrutaBT}}</h3>
+					                  <p>Total Bruta BT</p>
+					                </div>
+					                <div class="icon">
+					                  <i class="ion ion-person-add"></i>
+					                </div>
+					              </div>
+					            </div><!-- ./col -->
+					            
+					            <div class="col-lg-3 col-xs-6">
+					              <!-- small box -->
+					              <div class="small-box bg-red">
+					                <div class="inner">
+					                  <h3>{{totSemModalidade}}</h3>
+					                  <p>Sem Modalidade</p>
+					                </div>
+					                <div class="icon">
+					                  <i class="ion ion-pie-graph"></i>
+					                </div>
+					              </div>
+					            </div><!-- ./col -->
+					            
+					           </section>
+				</div>
+<!-- FIM RESUMO OPERACAO =================================================================================== -->                  
+               
+               
+               
+               <div class="tab-pane" id="tipoIF" >
+	                  <div class="box-body">
+	                  <div>
+				 			<small>TIPO IF:</small>
+				 			<select name="cbxTipoIF" id="cbxTipoIF" ng-model="mdTipoIF" ng-change="obterIFporTipoIF()">
+				 			<option value="" selected="selected"></option>
+					  		<option value="DEB">DEB</option>
+					  		<option value="CCB">CCB</option>
+					  		<option value="CRI">CRI</option>
+							</select>
+						</div>
+	                  <table id="tblIF" class="table table-bordered table-hover">
+					  <thead>
+							<tr>
+								<th>Código IF</th>
+								<th>Situação</th>
+								
+							</tr>
+					  </thead> 
+						<tbody>
+							<tr ng-repeat="listaIFTipoIF in listaIFTipoIFs">				
+								<td>{{listaIFTipoIF.codIF}}</td>				
+								<td>{{listaIFTipoIF.codSituacaoIF}}</td>
+							</tr>
+						</tbody>
+	                  </table>
+	                  </div><!-- /.box-body -->
+                  </div>   
+               
+               </div><!-- /.tab-content -->
+              </div><!-- /.nav-tabs-custom -->
+
+
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+        </section><!-- /.content -->
+      </div><!-- /.content-wrapper -->
+      <footer class="main-footer">
+      
+  
+      <div class="control-sidebar-bg"></div>
+    </div><!-- ./wrapper -->
+
+    
+    <!-- jQuery 2.1.4 -->
+    <script src="../../plugins/jQuery/jQuery-2.1.4.min.js"></script>
+    <!-- Bootstrap 3.3.5 -->
+    <script src="../../bootstrap/js/bootstrap.min.js"></script>
+    <!-- FastClick -->
+    <script src="../../plugins/fastclick/fastclick.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="../../dist/js/app.min.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="../../dist/js/demo.js"></script>
+    
+    
+    <script src="../../plugins/chartjs/Chart.min.js"></script>
+    
+  </body>
+</html>

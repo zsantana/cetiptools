@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<body ng-app="demo" ng-controller="demoController" ng-cloak>
+  <h1>Domino AngularJS Toaster Notifications</h1>
+
+
+  <div class="row">
+    <div class="col-md-4">
+      <p>This example will launch some toaster notifications which have been driven by some JSON data - the example URLS to call Domino Data has been commented out for the demo. Once the toaster notification has been cleared then the backend application
+        will update the status of the corresponding notification document using a PATCH request.
+        </p>
+        <p>
+        For the demo purposes a list of cleared notifcations will be displayed instead.
+        </p>
+        <p>
+            The associated blog article which describes this code is available <a href="">here.</a>
+    <br/>
+        <button ng-click="loadNotifications()" ng-disabled="demoClickedToasts.length>0" class="btn btn-success">Launch Demo</button>
+      </p>
+
+      <div class="panel panel-default" ng-hide="demoClickedToasts.length==0">
+        <div class="panel-heading">
+          <h3 class="panel-title">Dismissed Toasts</h3>
+        </div>
+        <div class="panel-body">
+          <ul class="list-group">
+            <li class="list-group-item" ng-repeat="toast in demoClickedToasts">
+              <span class="glyphicon glyphicon glyphicon-ok"></span> {{toast.title}}
+              <span ng-show="toast.type=='toast-info'" class="label label-info">Info</span>
+              <span ng-show="toast.type=='toast-warning'" class="label label-warning">Warning</span>
+              <span ng-show="toast.type=='toast-error'" class="label label-danger">Danger</span> 
+            </li>
+          </ul>
+        </div>
+        <div class="panel-footer">
+          <h3>Toaster Object (Debug)</h3>
+          <p>This is an example how you can simply dump the contents of a object out as JSON for debugging purposes - it uses an AngularJS filter to do this</p>
+          <pre>Example Code: { { demoClickedToasts || json } }</pre>
+
+          <pre>JSON Output: {{demoClickedToasts || json}}</pre>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-md-8"></div>
+  </div>
+
+
+
+
+
+  <script src="https://code.angularjs.org/1.2.13/angular-animate.js"></script>
+  <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/60204/toaster.js"></script>
+ 
+  <toaster-container toaster-options="{'time-out': 3000,'spinner':false}"></toaster-container>
+
+  
